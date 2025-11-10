@@ -1,10 +1,7 @@
 package com.example.medipet.core.data.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import com.example.medipet.model.data.entities.UserEntity
+import androidx.room.*
+import com.example.medipet.core.data.entities.UserEntity
 
 @Dao
 interface UserDao {
@@ -12,7 +9,13 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(user: UserEntity)
 
-    @Query("SELECT * FROM usuarios WHERE correo = :email AND password = :password")
+    @Delete
+    suspend fun delete(user: UserEntity) // ❌ antes usabas User (no existe esa clase)
+
+    @Update
+    suspend fun update(user: UserEntity) // ❌ vararg innecesario aquí, mejor uno
+
+    @Query("SELECT * FROM usuarios WHERE correo = :email AND password = :password LIMIT 1")
     suspend fun login(email: String, password: String): UserEntity?
 
     @Query("SELECT * FROM usuarios WHERE correo = :email LIMIT 1")
